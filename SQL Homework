@@ -110,7 +110,14 @@ SQL Homework
 `GROUCHO WILLIAMS`, the name of Harpo's second cousin's husband's yoga teacher. 
 Write a query to fix the record.
 
+		SET SQL_SAFE_UPDATES=0;
 
+		UPDATE 
+			actor
+		SET 
+			first_name = 'Harpo'
+		WHERE 
+			first_name = 'Groucho' ;
 
   	
 * 4d. Perhaps we were too hasty in changing `GROUCHO` to `HARPO`. It turns out that `GROUCHO` 
@@ -120,15 +127,18 @@ exactly what the actor will be with the grievous error.
 BE CAREFUL NOT TO CHANGE THE FIRST NAME OF EVERY ACTOR TO `MUCHO GROUCHO`, 
 HOWEVER! (Hint: update the record using a unique identifier.)
 
-
+		UPDATE
+			actor
+		SET first_name = 'Mucho Groucho'
+		WHERE actor_id = 172;
 
 
 * 5a. You cannot locate the schema of the `address` table. Which query would you use 
 to re-create it?
 
+???		show tables
 
-
-
+???		CREATE SCHEMEA address
 
 * 6a. Use `JOIN` to display the first and last names, as well as the address, of each staff 
 member. Use the tables `staff` and `address`:
@@ -346,15 +356,42 @@ for a promotion. Identify all movies categorized as famiy films.
 * 8a. In your new role as an executive, you would like to have an easy way of viewing the Top five 
 genres by gross revenue. Use the solution from the problem above to create a view. If you haven't solved 7h, 
 you can substitute another query to create a view.
-  	
+  		
+		CREATE VIEW TOP_5_Gross_Revenue AS
 
+		SELECT
+			name as 'genres'
+  		    ,sum(amount) as 'gross revenue'
+		FROM category as c
+		INNER JOIN    
+  		  film_category as fc
+		ON c.category_id = fc.category_id
+		INNER JOIN
+			inventory as i
+		ON fc.film_id = i.film_id
+
+		INNER JOIN
+			rental as r
+		ON i.inventory_id = r.inventory_id
+		INNER JOIN
+			payment as p
+		ON r.rental_id = p.rental_id
+		group by 
+			name
+		ORDER BY name desc
+		limit 5;
 
 
 
 * 8b. How would you display the view that you created in 8a?
 
-
+		SELECT 
+			*
+		FROM
+			TOP_5_Gross_Revenue;
 
 
 
 * 8c. You find that you no longer need the view `top_five_genres`. Write a query to delete it.
+
+		DROP VIEW TOP_5_Gross_Revenue;
