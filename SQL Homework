@@ -265,7 +265,7 @@ information.
 		FROM customer as c
 		INNER JOIN 
 			address as a
-		ON c.address_id = a.address
+		ON c.address_id = a.address_id
 		INNER JOIN
 			city
 		ON city.city_id =a.city_id
